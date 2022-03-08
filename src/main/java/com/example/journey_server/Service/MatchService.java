@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class MatchService {
+public class MatchService<mai> {
 
     private static Map<String, Peer> users = new HashMap<>();
 
@@ -38,20 +38,21 @@ public class MatchService {
 
 
     public List<Peer> getMatch(Peer user) {
-//        if (limit == null || limit == 0) {
-//            limit = 5;
-//        }
+        if (user.getLimit() == null || user.getLimit() == 0) {
+            user.setLimit(5);
+        }
         addUser(user);
         List<Peer> result = new ArrayList<>();
         for (Map.Entry<String, Peer> entry : users.entrySet()) {
             Peer userM = entry.getValue();
-//            double distance = getDistance(user.getLongitude(), user.getLatitude(), userM.getLongitude(), userM.getLatitude());
-//            if (distance < 500) {
-//                result.add(userM);
-//            }
-//            if (result.size() >= limit) {
-//                return result;
-//            }
+            double distance = getDistance(user.getLongitude(), user.getLatitude(), userM.getLongitude(), userM.getLatitude());
+            double edistance = getDistance(user.getdLongtitude(), user.getdLatitude(), userM.getdLongtitude(), userM.getdLatitude());
+            if (distance < 500 && edistance < 500) {
+                result.add(userM);
+            }
+            if (result.size() >= user.getLimit()) {
+                return result;
+            }
         }
         return result;
     }

@@ -4,23 +4,25 @@ public class Peer {
 
     String email;
 
-    int gender;
+    Integer gender;
 
-    int age;
+    Integer age;
 
-    double score;
+    Double score;
 
-    double longitude;
+    Double longitude;
 
-    double latitude;
+    Double latitude;
 
-    double dLongtitude;
+    Double dLongtitude;
 
-    double dLatitude;
+    Double dLatitude;
 
-    long startTime;
+    Long startTime;
 
-    long endTime;
+    Long endTime;
+
+    Integer limit;
 
     public String getEmail() {
         return email;
@@ -30,79 +32,87 @@ public class Peer {
         this.email = email;
     }
 
-    public int getGender() {
+    public Integer getGender() {
         return gender;
     }
 
-    public void setGender(int gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 
-    public double getScore() {
+    public Double getScore() {
         return score;
     }
 
-    public void setScore(double score) {
+    public void setScore(Double score) {
         this.score = score;
     }
 
-    public double getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
-    public double getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public double getdLongtitude() {
+    public Double getdLongtitude() {
         return dLongtitude;
     }
 
-    public void setdLongtitude(double dLongtitude) {
+    public void setdLongtitude(Double dLongtitude) {
         this.dLongtitude = dLongtitude;
     }
 
-    public double getdLatitude() {
+    public Double getdLatitude() {
         return dLatitude;
     }
 
-    public void setdLatitude(double dLatitude) {
+    public void setdLatitude(Double dLatitude) {
         this.dLatitude = dLatitude;
     }
 
-    public long getStartTime() {
+    public Long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(long startTime) {
+    public void setStartTime(Long startTime) {
         this.startTime = startTime;
     }
 
-    public long getEndTime() {
+    public Long getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(long endTime) {
+    public void setEndTime(Long endTime) {
         this.endTime = endTime;
     }
 
-    public Peer(String email, int gender, int age, double score, double longitude, double latitude, double dLongtitude, double dLatitude, long startTime, long endTime) {
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
+
+    public Peer(String email, Integer gender, Integer age, Double score, Double longitude, Double latitude, Double dLongtitude, Double dLatitude, Long startTime, Long endTime, Integer limit) {
         this.email = email;
         this.gender = gender;
         this.age = age;
@@ -113,5 +123,6 @@ public class Peer {
         this.dLatitude = dLatitude;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.limit = limit;
     }
 }
