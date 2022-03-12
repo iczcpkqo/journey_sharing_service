@@ -4,7 +4,7 @@ public class Peer {
 
     String email;
 
-    Integer gender;
+    String gender;
 
     Integer age;
 
@@ -22,7 +22,11 @@ public class Peer {
 
     Long endTime;
 
+    Integer order;
+
     Integer limit;
+
+    Boolean isLeader;
 
     public String getEmail() {
         return email;
@@ -32,11 +36,11 @@ public class Peer {
         this.email = email;
     }
 
-    public Integer getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(Integer gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
@@ -112,7 +116,23 @@ public class Peer {
         this.limit = limit;
     }
 
-    public Peer(String email, Integer gender, Integer age, Double score, Double longitude, Double latitude, Double dLongtitude, Double dLatitude, Long startTime, Long endTime, Integer limit) {
+    public Boolean getLeader() {
+        return isLeader;
+    }
+
+    public void setLeader(Boolean leader) {
+        isLeader = leader;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
+
+    public Peer(String email, String gender, Integer age, Double score, Double longitude, Double latitude, Double dLongtitude, Double dLatitude, Long startTime, Long endTime, Integer limit, Boolean isLeader) {
         this.email = email;
         this.gender = gender;
         this.age = age;
@@ -124,5 +144,6 @@ public class Peer {
         this.startTime = startTime;
         this.endTime = endTime;
         this.limit = limit;
+        this.isLeader = isLeader;
     }
 }

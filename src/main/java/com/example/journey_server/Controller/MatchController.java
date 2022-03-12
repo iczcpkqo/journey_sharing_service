@@ -18,15 +18,26 @@ public class MatchController {
     private MatchService matchService;
 
 
-//    , @RequestParam("limit") int limit
-    @PostMapping("/match")
-    public List<Peer> match(@RequestBody Peer peer) {
+    //    , @RequestParam("limit") int limit
+    @PostMapping("/matchLeader")
+    public List<Peer> matchLeader(@RequestBody Peer peer) {
 //        List<Peer> usersList = matchService.getMatch(peer);
         List<Peer> usersList = new ArrayList<>();
-        Peer peer1 = new Peer("11@qq.com",1,23,4.4,-6.32,53.33,-6.51,53.3,0L,0L,5);
-        Peer peer2 = new Peer("22@qq.com",2,23,4.4,-6.32,53.33,-6.51,53.3,0L,0L,5);
+        Peer peer1 = new Peer("11@qq.com", "male", 23, 4.4, -6.32, 53.33, -6.51, 53.3, 0L, 0L, 5, false);
+        Peer peer2 = new Peer("22@qq.com", "female", 23, 4.4, -6.32, 53.33, -6.51, 53.3, 0L, 0L, 5, false);
         usersList.add(peer1);
-        usersList.add(peer2) ;
+        usersList.add(peer2);
+        return usersList;
+    }
+
+    @PostMapping("/matchMember")
+    public List<Peer> matchMember(@RequestBody Peer peer) {
+//        List<Peer> usersList = matchService.getMatch(peer);
+        List<Peer> usersList = new ArrayList<>();
+        Peer peer1 = new Peer("11@qq.com", "male", 23, 4.4, -6.32, 53.33, -6.51, 53.3, 0L, 0L, 5, false);
+        Peer peer2 = new Peer("22@qq.com", "female", 23, 4.4, -6.32, 53.33, -6.51, 53.3, 0L, 0L, 5, false);
+        usersList.add(peer1);
+        usersList.add(peer2);
         return usersList;
     }
 
