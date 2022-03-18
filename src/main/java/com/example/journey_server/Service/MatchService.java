@@ -13,6 +13,8 @@ public class MatchService {
 
     private static Map<String, Peer> users = new HashMap<>();
 
+    private static Map<String, List<Peer>> matchedUser = new HashMap<>();
+
     private static final double EARTH_RADIUS = 6378137;
 
     private static double rad(double d) {
@@ -76,12 +78,15 @@ public class MatchService {
         }
         addUser(user);
         List<Peer> result = new ArrayList<>();
+        result.add(user);
         for (Map.Entry<String, Peer> entry : users.entrySet()) {
             Peer userM = entry.getValue();
             double distance = getDistance(user.getLongitude(), user.getLatitude(), userM.getLongitude(), userM.getLatitude());
             if (distance < 500 && getAngel(user.getdLongtitude(), user.getdLatitude(), user.getLongitude(), user.getLongitude(),
                     userM.getdLongtitude(), userM.getdLatitude()) < 45) {
                 result.add(userM);
+                users.remove(userM.getEmail());
+                matchedUser.put(user.getEmail(), result);
             }
             if (result.size() >= user.getLimit()) {
                 return result;
@@ -93,5 +98,17 @@ public class MatchService {
     public static void main(String[] args) {
         MatchService matchService = new MatchService();
         System.out.print(matchService.getAngel(53.342186, -6.254613, 53.341226, -6.250776, 53.342164, -6.251525));
+    }
+
+    public List<Peer> getMatchMember(Peer peer) {
+        addUser(peer);
+        for (Map.Entry<String, List<Peer>> entry : matchedUser.entrySet()) {
+            for (Peer userM : entry.getValue()) {
+                if(peer.getEmail().equals(userM.getEmail())){
+                    return entry.getValue();
+                }
+            }
+        }
+        return new ArrayList<>();
     }
 }
