@@ -89,22 +89,37 @@ public class MatchService {
                 matchedUser.put(user.getEmail(), result);
             }
             if (result.size() >= user.getLimit()) {
+                result.add(user);
+                calFurthest(result);
                 return result;
             }
         }
         return result;
     }
 
-    public static void main(String[] args) {
-        MatchService matchService = new MatchService();
-        System.out.print(matchService.getAngel(53.342186, -6.254613, 53.341226, -6.250776, 53.342164, -6.251525));
+    public void calFurthest(List<Peer> peers) {
+        String email = null;
+        double maxd = Long.MIN_VALUE;
+        for (Peer peer : peers) {
+            double d1 = getDistance(peer.getdLongtitude(), peer.getLatitude(), peer.getdLongtitude(), peer.getdLatitude());
+            if (d1 > maxd) {
+                maxd = d1;
+                email = peer.getEmail();
+            }
+        }
+
+        for (Peer peer : peers) {
+            if (peer.getEmail().equals(email)) {
+                peer.setFurthest(true);
+            }
+        }
     }
 
     public List<Peer> getMatchMember(Peer peer) {
         addUser(peer);
         for (Map.Entry<String, List<Peer>> entry : matchedUser.entrySet()) {
             for (Peer userM : entry.getValue()) {
-                if(peer.getEmail().equals(userM.getEmail())){
+                if (peer.getEmail().equals(userM.getEmail())) {
                     return entry.getValue();
                 }
             }
