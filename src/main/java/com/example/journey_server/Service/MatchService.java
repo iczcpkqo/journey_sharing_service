@@ -1,6 +1,8 @@
 package com.example.journey_server.Service;
 
 import com.example.journey_server.entity.Peer;
+import com.example.journey_server.utils.redisUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,6 +22,9 @@ public class MatchService {
     private static double rad(double d) {
         return d * Math.PI / 180.0;
     }
+
+    @Autowired
+    private static redisUtil redisUtil;
 
     public static double getDistance(double lon1, double lat1, double lon2, double lat2) {
         double radLat1 = rad(lat1);

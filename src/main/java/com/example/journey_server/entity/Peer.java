@@ -1,6 +1,8 @@
 package com.example.journey_server.entity;
 
-public class Peer {
+import java.io.Serializable;
+
+public class Peer implements Serializable {
 
     String email;
 
@@ -156,4 +158,6 @@ public class Peer {
         this.limit = limit;
         this.isLeader = isLeader;
     }
+
+
 }
