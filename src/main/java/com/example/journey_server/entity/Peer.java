@@ -28,6 +28,8 @@ public class Peer {
 
     Boolean isLeader;
 
+    Boolean isFurthest;
+
     public String getEmail() {
         return email;
     }
@@ -130,6 +132,14 @@ public class Peer {
 
     public void setOrder(Integer order) {
         this.order = order;
+    }
+
+    public Boolean getFurthest() {
+        return isFurthest;
+    }
+
+    public void setFurthest(Boolean furthest) {
+        isFurthest = furthest;
     }
 
     public Peer(String email, String gender, Integer age, Double score, Double longitude, Double latitude, Double dLongtitude, Double dLatitude, Long startTime, Long endTime, Integer limit, Boolean isLeader) {

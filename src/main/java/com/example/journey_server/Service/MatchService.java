@@ -13,6 +13,8 @@ public class MatchService {
 
     private static Map<String, Peer> users = new HashMap<>();
 
+    private static Map<String, List<Peer>> matchedUser = new HashMap<>();
+
     private static final double EARTH_RADIUS = 6378137;
 
     private static double rad(double d) {
@@ -76,22 +78,52 @@ public class MatchService {
         }
         addUser(user);
         List<Peer> result = new ArrayList<>();
+        result.add(user);
         for (Map.Entry<String, Peer> entry : users.entrySet()) {
             Peer userM = entry.getValue();
             double distance = getDistance(user.getLongitude(), user.getLatitude(), userM.getLongitude(), userM.getLatitude());
             if (distance < 500 && getAngel(user.getdLongtitude(), user.getdLatitude(), user.getLongitude(), user.getLongitude(),
                     userM.getdLongtitude(), userM.getdLatitude()) < 45) {
                 result.add(userM);
+                users.remove(userM.getEmail());
+                matchedUser.put(user.getEmail(), result);
             }
             if (result.size() >= user.getLimit()) {
+                result.add(user);
+                calFurthest(result);
                 return result;
             }
         }
         return result;
     }
 
-    public static void main(String[] args) {
-        MatchService matchService = new MatchService();
-        System.out.print(matchService.getAngel(53.342186, -6.254613, 53.341226, -6.250776, 53.342164, -6.251525));
+    public void calFurthest(List<Peer> peers) {
+        String email = null;
+        double maxd = Long.MIN_VALUE;
+        for (Peer peer : peers) {
+            double d1 = getDistance(peer.getdLongtitude(), peer.getLatitude(), peer.getdLongtitude(), peer.getdLatitude());
+            if (d1 > maxd) {
+                maxd = d1;
+                email = peer.getEmail();
+            }
+        }
+
+        for (Peer peer : peers) {
+            if (peer.getEmail().equals(email)) {
+                peer.setFurthest(true);
+            }
+        }
+    }
+
+    public List<Peer> getMatchMember(Peer peer) {
+        addUser(peer);
+        for (Map.Entry<String, List<Peer>> entry : matchedUser.entrySet()) {
+            for (Peer userM : entry.getValue()) {
+                if (peer.getEmail().equals(userM.getEmail())) {
+                    return entry.getValue();
+                }
+            }
+        }
+        return new ArrayList<>();
     }
 }
