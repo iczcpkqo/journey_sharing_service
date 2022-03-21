@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 
 @Component
-public class serializeUtil {
+public class SerializeUtil {
 
     public byte[] serialize(Object obj) {
         ObjectOutputStream obi = null;

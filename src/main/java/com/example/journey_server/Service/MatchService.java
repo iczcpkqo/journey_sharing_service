@@ -1,9 +1,11 @@
 package com.example.journey_server.Service;
 
 import com.example.journey_server.entity.Peer;
-import com.example.journey_server.utils.redisUtil;
+import com.example.journey_server.utils.RedisUtil;
+import com.example.journey_server.utils.SerializeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,9 +15,6 @@ import java.util.Map;
 @Service
 public class MatchService {
 
-    private static Map<String, Peer> users = new HashMap<>();
-
-    private static Map<String, List<Peer>> matchedUser = new HashMap<>();
 
     private static final double EARTH_RADIUS = 6378137;
 
@@ -24,7 +23,8 @@ public class MatchService {
     }
 
     @Autowired
-    private static redisUtil redisUtil;
+    private static RedisUtil redisUtil;
+
 
     public static double getDistance(double lon1, double lat1, double lon2, double lat2) {
         double radLat1 = rad(lat1);
@@ -34,13 +34,6 @@ public class MatchService {
         double s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLat1) * Math.cos(radLat2) * Math.pow(Math.sin(b / 2), 2)));
         s = s * EARTH_RADIUS;
         return s;
-    }
-
-    public void addUser(Peer user) {
-        if (users.containsKey(user.getEmail())) {
-            return;
-        }
-        users.put(user.getEmail(), user);
     }
 
     public double[] geo2xyz(double lon, double lat) {
@@ -66,7 +59,6 @@ public class MatchService {
      * @return
      */
     public double getAngel(double lon1, double lat1, double lon2, double lat2, double lon3, double lat3) {
-
         double[] p1 = geo2xyz(lon1, lat1);
         double[] p2 = geo2xyz(lon2, lat2);
         double[] p3 = geo2xyz(lon3, lat3);
@@ -74,24 +66,23 @@ public class MatchService {
         double P2P3 = Math.sqrt((p3[0] - p2[0]) * (p3[0] - p2[0]) + (p3[1] - p2[1]) * (p3[1] - p2[1]) + (p3[2] - p2[2]) * (p3[2] - p2[2]));
         double P = (p1[0] - p2[0]) * (p3[0] - p2[0]) + (p1[1] - p2[1]) * (p3[1] - p2[1]) + (p1[2] - p2[2]) * (p3[2] - p2[2]);
         return (Math.acos(P / (P1P2 * P2P3)) / Math.PI) * 180;
-
     }
 
     public List<Peer> getMatch(Peer user) {
         if (user.getLimit() == null || user.getLimit() == 0) {
             user.setLimit(5);
         }
-        addUser(user);
+        redisUtil.addUser(user);
         List<Peer> result = new ArrayList<>();
         result.add(user);
-        for (Map.Entry<String, Peer> entry : users.entrySet()) {
+        for (Map.Entry<String, Peer> entry : redisUtil.getUsers().entrySet()) {
             Peer userM = entry.getValue();
             double distance = getDistance(user.getLongitude(), user.getLatitude(), userM.getLongitude(), userM.getLatitude());
             if (distance < 500 && getAngel(user.getdLongtitude(), user.getdLatitude(), user.getLongitude(), user.getLongitude(),
                     userM.getdLongtitude(), userM.getdLatitude()) < 45) {
                 result.add(userM);
-                users.remove(userM.getEmail());
-                matchedUser.put(user.getEmail(), result);
+                redisUtil.removeUser(userM.getEmail());
+                redisUtil.putMatchedUser(user.getEmail(), result);
             }
             if (result.size() >= user.getLimit()) {
                 result.add(user);
@@ -121,8 +112,8 @@ public class MatchService {
     }
 
     public List<Peer> getMatchMember(Peer peer) {
-        addUser(peer);
-        for (Map.Entry<String, List<Peer>> entry : matchedUser.entrySet()) {
+        redisUtil.addUser(peer);
+        for (Map.Entry<String, List<Peer>> entry : redisUtil.getMatchedUser().entrySet()) {
             for (Peer userM : entry.getValue()) {
                 if (peer.getEmail().equals(userM.getEmail())) {
                     return entry.getValue();

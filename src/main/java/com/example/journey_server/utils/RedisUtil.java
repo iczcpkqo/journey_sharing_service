@@ -8,13 +8,13 @@ import redis.clients.jedis.Jedis;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 @Component
-public class redisUtil {
+public class RedisUtil {
 
     private static String ip = null;
 
@@ -22,7 +22,8 @@ public class redisUtil {
 
     private static Jedis jedis = null;
 
-    private static serializeUtil serializeUtil = new serializeUtil();
+    @Autowired
+    private static SerializeUtil serializeUtil;
 
     static {
         Properties pro = new Properties();
@@ -43,10 +44,8 @@ public class redisUtil {
 
     }
 
-
     public void addUser(Peer user) {
         byte[] bytes = jedis.get("users".getBytes());
-
         Map<String, Peer> users = null;
         if (null == bytes) {
             users = new HashMap<>();
@@ -57,18 +56,51 @@ public class redisUtil {
                 return;
             }
         }
-
         users.put(user.getEmail(), user);
         jedis.set("users".getBytes(), serializeUtil.serialize(users));
     }
 
-    public static void main(String[] args) throws IOException {
-        redisUtil redisUtil = new redisUtil();
-        jedis.flushDB();
-        Peer peer1 = new Peer("11@qq.com", "male", 23, 4.4, 53.33, -6.32, 53.3, -6.51, 0L, 0L, 5, false);
-        redisUtil.addUser(peer1);
-        Map<String, Peer> users = (Map<String, Peer>) serializeUtil.unserizlize(jedis.get("users".getBytes()));
-        System.out.println(users.get("11@qq.com"));
+    public Map<String, Peer> getUsers() {
+        Map<String, Peer> users = new HashMap<>();
+        byte[] bytes = jedis.get("users".getBytes());
+        if (null == bytes) {
+            return users;
+        } else {
+            users = (Map<String, Peer>) serializeUtil.unserizlize(bytes);
+            return users;
+        }
+    }
 
+    public void removeUser(String email) {
+        byte[] bytes = jedis.get("users".getBytes());
+        if (null == bytes) {
+            return;
+        }
+        Map<String, Peer> users = (Map<String, Peer>) serializeUtil.unserizlize(bytes);
+        if (users.containsKey(email)) {
+            users.remove(email);
+            jedis.set("users".getBytes(), serializeUtil.serialize(users));
+        }
+    }
+
+    public void putMatchedUser(String email, List<Peer> peers) {
+        byte[] bytes = jedis.get("matchedUser".getBytes());
+        Map<String, List<Peer>> matched;
+        if (null == bytes) {
+            matched = new HashMap<>();
+        } else {
+            matched = (Map<String, List<Peer>>) serializeUtil.unserizlize(bytes);
+        }
+        matched.put(email, peers);
+        jedis.set("matchedUser".getBytes(), serializeUtil.serialize(matched));
+    }
+
+    public Map<String, List<Peer>> getMatchedUser(){
+        byte[] bytes = jedis.get("matchedUser".getBytes());
+        if(null == bytes){
+            return new HashMap<>();
+        }else {
+            return (Map<String, List<Peer>>) serializeUtil.unserizlize(bytes);
+        }
     }
 }
