@@ -23,7 +23,7 @@ public class RedisUtil {
     private static Jedis jedis = null;
 
     @Autowired
-    private static SerializeUtil serializeUtil;
+    private SerializeUtil serializeUtil;
 
     static {
         Properties pro = new Properties();

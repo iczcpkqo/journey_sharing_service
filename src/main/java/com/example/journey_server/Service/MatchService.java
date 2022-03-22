@@ -2,13 +2,9 @@ package com.example.journey_server.Service;
 
 import com.example.journey_server.entity.Peer;
 import com.example.journey_server.utils.RedisUtil;
-import com.example.journey_server.utils.SerializeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import redis.clients.jedis.Jedis;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,10 +19,10 @@ public class MatchService {
     }
 
     @Autowired
-    private static RedisUtil redisUtil;
+    private RedisUtil redisUtil;
 
 
-    public static double getDistance(double lon1, double lat1, double lon2, double lat2) {
+    public double getDistance(double lon1, double lat1, double lon2, double lat2) {
         double radLat1 = rad(lat1);
         double radLat2 = rad(lat2);
         double a = radLat1 - radLat2;
