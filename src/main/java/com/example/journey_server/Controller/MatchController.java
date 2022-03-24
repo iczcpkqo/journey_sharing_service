@@ -25,17 +25,18 @@ public class MatchController {
     public List<Peer> matchLeader(@RequestBody Peer peer) {
         System.out.println(peer.getEmail());
         List<Peer> result = new ArrayList<>();
-        if(redisUtil.lock(peer.getEmail())){
-            try{
-                result = matchService.getMatch(peer);
-            }catch (Exception e){
-                redisUtil.unlock(peer.getEmail());
-                return new ArrayList<>();
-            }
-            return result;
-        }else {
-            return result;
-        }
+        result = matchService.getMatch(peer);
+//        if(redisUtil.lock(peer.getEmail())){
+//            try{
+//
+//            }catch (Exception e){
+//                redisUtil.unlock(peer.getEmail());
+//                return new ArrayList<>();
+//            }
+//            return result;
+//        }else {
+        return result;
+    }
 
 
 //        List<Peer> usersList = new ArrayList<>();
@@ -43,7 +44,7 @@ public class MatchController {
 //        Peer peer2 = new Peer("22@qq.com", "female", 23, 4.4, 53.33,-6.32,  53.3,-6.51,  0L, 0L, 5, false);
 //        usersList.add(peer1);
 //        usersList.add(peer2);
-    }
+//}
 
     @PostMapping("/matchMember")
     public List<Peer> matchMember(@RequestBody Peer peer) {
