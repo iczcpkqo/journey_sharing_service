@@ -8,10 +8,7 @@ import redis.clients.jedis.Jedis;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 @Component
 public class RedisUtil {
@@ -21,6 +18,19 @@ public class RedisUtil {
     private static String port = null;
 
     private static Jedis jedis = null;
+
+    private static String lock_key = "redis_lock";
+
+    private static long internalLockLeaseTime = 30000;
+
+    private static long timeout = 45000;
+
+    private static final String LOCK_SUCCESS = "OK";
+
+    private static final String SET_IF_NOT_EXIST = "NX";
+
+    private static final String SET_WITH_EXPIRE_TIME = "PX";
+
 
     @Autowired
     private SerializeUtil serializeUtil;
@@ -42,6 +52,10 @@ public class RedisUtil {
         port = pro.getProperty("port");
         jedis = new Jedis(ip, Integer.parseInt(port));
 
+    }
+
+    public Jedis getJedis() {
+        return jedis;
     }
 
     public void addUser(Peer user) {
@@ -95,12 +109,58 @@ public class RedisUtil {
         jedis.set("matchedUser".getBytes(), serializeUtil.serialize(matched));
     }
 
-    public Map<String, List<Peer>> getMatchedUser(){
+    public Map<String, List<Peer>> getMatchedUser() {
         byte[] bytes = jedis.get("matchedUser".getBytes());
-        if(null == bytes){
+        if (null == bytes) {
             return new HashMap<>();
-        }else {
+        } else {
             return (Map<String, List<Peer>>) serializeUtil.unserizlize(bytes);
+        }
+    }
+
+    public boolean lock(String id) {
+        Long start = System.currentTimeMillis();
+        try {
+            for (; ; ) {
+                String lock = jedis.set(lock_key, id, SET_IF_NOT_EXIST, SET_WITH_EXPIRE_TIME, internalLockLeaseTime);
+                if (LOCK_SUCCESS.equals(lock)) {
+                    return true;
+                }
+                long l = System.currentTimeMillis() - start;
+                if (l >= timeout) {
+                    return false;
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        } finally {
+            jedis.close();
+        }
+    }
+
+    /**
+     * @param id
+     * @return
+     */
+    public boolean unlock(String id){
+        String script =
+                "if redis.call('get',KEYS[1]) == ARGV[1] then" +
+                        "   return redis.call('del',KEYS[1]) " +
+                        "else" +
+                        "   return 0 " +
+                        "end";
+        try {
+            Object result = jedis.eval(script, Collections.singletonList(lock_key),
+                    Collections.singletonList(id));
+            if("1".equals(result.toString())){
+                return true;
+            }
+            return false;
+        }finally {
+            jedis.close();
         }
     }
 }

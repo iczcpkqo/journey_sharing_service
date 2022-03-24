@@ -81,7 +81,6 @@ public class MatchService {
                 redisUtil.putMatchedUser(user.getEmail(), result);
             }
             if (result.size() >= user.getLimit()) {
-                result.add(user);
                 calFurthest(result);
                 return result;
             }
@@ -116,6 +115,10 @@ public class MatchService {
                 }
             }
         }
+
         return new ArrayList<>();
+
     }
+
+
 }
