@@ -39,6 +39,10 @@ public class Peer implements Serializable {
 
     List<String> blacklist;
 
+    String ip;
+
+    String port;
+
     public String getEmail() {
         return email;
     }
@@ -175,7 +179,23 @@ public class Peer implements Serializable {
         this.blacklist = blacklist;
     }
 
-    public Peer(String email, String gender, Integer age, Double score, Double longitude, Double latitude, Double dLongtitude, Double dLatitude, Long startTime, Long endTime, Integer order, Integer limit, Boolean isLeader, Boolean isFurthest, String uuid, Boolean isConfirmed, List<String> blacklist) {
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
+    public Peer(String email, String gender, Integer age, Double score, Double longitude, Double latitude, Double dLongtitude, Double dLatitude, Long startTime, Long endTime, Integer order, Integer limit, Boolean isLeader, Boolean isFurthest, String uuid, Boolean isConfirmed, List<String> blacklist, String ip, String port) {
         this.email = email;
         this.gender = gender;
         this.age = age;
@@ -193,5 +213,7 @@ public class Peer implements Serializable {
         this.uuid = uuid;
         this.isConfirmed = isConfirmed;
         this.blacklist = blacklist;
+        this.ip = ip;
+        this.port = port;
     }
 }
