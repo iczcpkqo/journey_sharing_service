@@ -70,8 +70,8 @@ public class MatchService {
         if (user.getLimit() == null || user.getLimit() == 0) {
             user.setLimit(5);
         }
-        user.setLeader(true);
         redisUtil.addUser(user);
+        user.setLeader(true);
         String uuid = UUID.randomUUID().toString();
         List<Peer> result = new ArrayList<>();
         result.add(user);
@@ -79,7 +79,7 @@ public class MatchService {
             Peer userM = entry.getValue();
             double distance = getDistance(user.getLongitude(), user.getLatitude(), userM.getLongitude(), userM.getLatitude());
             if (distance < 500 && getAngel(user.getdLongtitude(), user.getdLatitude(), user.getLongitude(), user.getLongitude(),
-                    userM.getdLongtitude(), userM.getdLatitude()) < 45) {
+                    userM.getdLongtitude(), userM.getdLatitude()) < 45 && !user.getEmail().equals(userM.getEmail())) {
                 result.add(userM);
                 redisUtil.removeUser(userM.getEmail());
                 redisUtil.putMatchedUser(user.getEmail(), result);
@@ -92,6 +92,10 @@ public class MatchService {
         }
         calFurthest(result);
         addUuid(result, uuid);
+        for (Peer peer : result) {
+            System.out.println(peer.getEmail() + ":" + peer.getLeader());
+        }
+
         return result;
     }
 

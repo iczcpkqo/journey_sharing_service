@@ -66,9 +66,6 @@ public class RedisUtil {
         } else {
             Map<String, Peer> userss = (Map<String, Peer>) serializeUtil.unserizlize(bytes);
             users = userss;
-            if (users.containsKey(user.getEmail())) {
-                return;
-            }
         }
         users.put(user.getEmail(), user);
         jedis.set("users".getBytes(), serializeUtil.serialize(users));
