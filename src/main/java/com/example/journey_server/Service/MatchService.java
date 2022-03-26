@@ -4,9 +4,11 @@ import com.example.journey_server.entity.Peer;
 import com.example.journey_server.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class MatchService {
@@ -69,6 +71,7 @@ public class MatchService {
             user.setLimit(5);
         }
         redisUtil.addUser(user);
+        String uuid = UUID.randomUUID().toString();
         List<Peer> result = new ArrayList<>();
         result.add(user);
         for (Map.Entry<String, Peer> entry : redisUtil.getUsers().entrySet()) {
@@ -82,13 +85,29 @@ public class MatchService {
             }
             if (result.size() >= user.getLimit()) {
                 calFurthest(result);
+                addUuid(result, uuid);
                 return result;
             }
         }
+        calFurthest(result);
+        addUuid(result, uuid);
         return result;
     }
 
+    private void addUuid(List<Peer> result, String uuid) {
+        if (result.size() == 0) {
+            return;
+        }
+        for (Peer peer : result) {
+            peer.setUuid(uuid);
+        }
+
+    }
+
     public void calFurthest(List<Peer> peers) {
+        if (peers.size() == 0) {
+            return;
+        }
         String email = null;
         double maxd = Long.MIN_VALUE;
         for (Peer peer : peers) {

@@ -32,6 +32,8 @@ public class Peer implements Serializable {
 
     Boolean isFurthest;
 
+    String uuid;
+
     public String getEmail() {
         return email;
     }
@@ -112,6 +114,14 @@ public class Peer implements Serializable {
         this.endTime = endTime;
     }
 
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
+
     public Integer getLimit() {
         return limit;
     }
@@ -128,14 +138,6 @@ public class Peer implements Serializable {
         isLeader = leader;
     }
 
-    public Integer getOrder() {
-        return order;
-    }
-
-    public void setOrder(Integer order) {
-        this.order = order;
-    }
-
     public Boolean getFurthest() {
         return isFurthest;
     }
@@ -144,7 +146,15 @@ public class Peer implements Serializable {
         isFurthest = furthest;
     }
 
-    public Peer(String email, String gender, Integer age, Double score, Double longitude, Double latitude, Double dLongtitude, Double dLatitude, Long startTime, Long endTime, Integer limit, Boolean isLeader) {
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public Peer(String email, String gender, Integer age, Double score, Double longitude, Double latitude, Double dLongtitude, Double dLatitude, Long startTime, Long endTime, Integer order, Integer limit, Boolean isLeader, Boolean isFurthest, String uuid) {
         this.email = email;
         this.gender = gender;
         this.age = age;
@@ -155,9 +165,10 @@ public class Peer implements Serializable {
         this.dLatitude = dLatitude;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.order = order;
         this.limit = limit;
         this.isLeader = isLeader;
+        this.isFurthest = isFurthest;
+        this.uuid = uuid;
     }
-
-
 }
