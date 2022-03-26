@@ -1,6 +1,7 @@
 package com.example.journey_server.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Peer implements Serializable {
 
@@ -33,6 +34,10 @@ public class Peer implements Serializable {
     Boolean isFurthest;
 
     String uuid;
+
+    Boolean isConfirmed;
+
+    List<String> blacklist;
 
     public String getEmail() {
         return email;
@@ -154,7 +159,23 @@ public class Peer implements Serializable {
         this.uuid = uuid;
     }
 
-    public Peer(String email, String gender, Integer age, Double score, Double longitude, Double latitude, Double dLongtitude, Double dLatitude, Long startTime, Long endTime, Integer order, Integer limit, Boolean isLeader, Boolean isFurthest, String uuid) {
+    public Boolean getConfirmed() {
+        return isConfirmed;
+    }
+
+    public void setConfirmed(Boolean confirmed) {
+        isConfirmed = confirmed;
+    }
+
+    public List<String> getBlacklist() {
+        return blacklist;
+    }
+
+    public void setBlacklist(List<String> blacklist) {
+        this.blacklist = blacklist;
+    }
+
+    public Peer(String email, String gender, Integer age, Double score, Double longitude, Double latitude, Double dLongtitude, Double dLatitude, Long startTime, Long endTime, Integer order, Integer limit, Boolean isLeader, Boolean isFurthest, String uuid, Boolean isConfirmed, List<String> blacklist) {
         this.email = email;
         this.gender = gender;
         this.age = age;
@@ -170,5 +191,7 @@ public class Peer implements Serializable {
         this.isLeader = isLeader;
         this.isFurthest = isFurthest;
         this.uuid = uuid;
+        this.isConfirmed = isConfirmed;
+        this.blacklist = blacklist;
     }
 }
