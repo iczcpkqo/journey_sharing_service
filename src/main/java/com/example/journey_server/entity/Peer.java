@@ -28,6 +28,8 @@ public class Peer implements Serializable {
 
     Integer order;
 
+    String orderId;
+
     Integer limit;
 
     Boolean leader;
@@ -216,6 +218,22 @@ public class Peer implements Serializable {
 
     public void setDestination(String destination) {
         this.destination = destination;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public Map<String, String> getOtherFields() {
+        return otherFields;
+    }
+
+    public void setOtherFields(Map<String, String> otherFields) {
+        this.otherFields = otherFields;
     }
 
     public Peer(String email, String gender, Integer age, Double score, Double longitude, Double latitude, Double dLongtitude, Double dLatitude, Long startTime, Long endTime, Integer order, Integer limit, Boolean leader, Boolean furthest, String uuid, Boolean confirmed, List<String> blacklist, String ip, String port, String startAddress, String destination) {
