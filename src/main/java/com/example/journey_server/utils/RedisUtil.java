@@ -142,7 +142,7 @@ public class RedisUtil {
      * @param id
      * @return
      */
-    public boolean unlock(String id){
+    public boolean unlock(String id) {
         String script =
                 "if redis.call('get',KEYS[1]) == ARGV[1] then" +
                         "   return redis.call('del',KEYS[1]) " +
@@ -152,11 +152,11 @@ public class RedisUtil {
         try {
             Object result = jedis.eval(script, Collections.singletonList(lock_key),
                     Collections.singletonList(id));
-            if("1".equals(result.toString())){
+            if ("1".equals(result.toString())) {
                 return true;
             }
             return false;
-        }finally {
+        } finally {
             jedis.close();
         }
     }

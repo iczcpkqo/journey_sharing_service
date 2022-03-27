@@ -145,4 +145,16 @@ public class MatchService {
     }
 
 
+    public String createGroup(List<Peer> peers) {
+        return "";
+    }
+
+    public Peer getLeader(List<Peer> peers) {
+        for (Peer peer : peers) {
+            if (peer.getLeader()) {
+                return peer;
+            }
+        }
+        return peers.get(0);
+    }
 }
