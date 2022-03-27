@@ -2,6 +2,7 @@ package com.example.journey_server.entity;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 public class Peer implements Serializable {
 
@@ -46,6 +47,8 @@ public class Peer implements Serializable {
     String startAddress;
 
     String destination;
+
+    Map<String,String> otherFields;
 
     public String getEmail() {
         return email;
