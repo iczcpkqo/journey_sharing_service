@@ -77,13 +77,22 @@ public class MatchService {
         result.add(user);
         for (Map.Entry<String, Peer> entry : redisUtil.getUsers().entrySet()) {
             Peer userM = entry.getValue();
-            double distance = getDistance(user.getLongitude(), user.getLatitude(), userM.getLongitude(), userM.getLatitude());
-            if (distance < 500 && getAngel(user.getdLongtitude(), user.getdLatitude(), user.getLongitude(), user.getLongitude(),
-                    userM.getdLongtitude(), userM.getdLatitude()) < 45 && !user.getEmail().equals(userM.getEmail())) {
-                result.add(userM);
-                redisUtil.removeUser(userM.getEmail());
-                redisUtil.putMatchedUser(user.getEmail(), result);
+            if (user.getEmail().equals(userM.getEmail())) {
+                continue;
             }
+            if (userM.getAge() > user.getMaxAge() || userM.getAge() < user.getMinAge()) {
+                continue;
+            }
+            if (getDistance(user.getLongitude(), user.getLatitude(), userM.getLongitude(), userM.getLatitude()) >= 500) {
+                continue;
+            }
+            if (getAngel(user.getdLongtitude(), user.getdLatitude(), user.getLongitude(), user.getLongitude(),
+                    userM.getdLongtitude(), userM.getdLatitude()) >= 45) {
+                continue;
+            }
+            result.add(userM);
+            redisUtil.removeUser(userM.getEmail());
+            redisUtil.putMatchedUser(user.getEmail(), result);
             if (result.size() >= user.getLimit()) {
                 calFurthest(result);
                 addUuid(result, uuid);
