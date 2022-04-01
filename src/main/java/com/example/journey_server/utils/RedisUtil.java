@@ -59,16 +59,40 @@ public class RedisUtil {
     }
 
     public void addUser(Peer user) {
-        byte[] bytes = jedis.get("users".getBytes());
-        Map<String, Peer> users = null;
+        boolean result = checkAllUserPool(user);
+        if(!result){
+            byte[] bytes = jedis.get("users".getBytes());
+            Map<String, Peer> users = null;
+            if (null == bytes) {
+                users = new HashMap<>();
+            } else {
+                Map<String, Peer> userss = (Map<String, Peer>) serializeUtil.unserizlize(bytes);
+                users = userss;
+            }
+            users.put(user.getEmail(), user);
+            jedis.set("users".getBytes(), serializeUtil.serialize(users));
+        }
+
+    }
+
+    private boolean checkAllUserPool(Peer user) {
+        byte[] bytes = jedis.get("allUsers".getBytes());
+        boolean result = true;
+        Map<String, Peer> allUsers = null;
         if (null == bytes) {
-            users = new HashMap<>();
+            allUsers = new HashMap<>();
+            result = false;
         } else {
             Map<String, Peer> userss = (Map<String, Peer>) serializeUtil.unserizlize(bytes);
-            users = userss;
+            allUsers = userss;
+            Peer peer = userss.get(user.getEmail());
+            if(peer == null){
+                result = false;
+            }
         }
-        users.put(user.getEmail(), user);
-        jedis.set("users".getBytes(), serializeUtil.serialize(users));
+        allUsers.put(user.getEmail(), user);
+        jedis.set("allUsers".getBytes(), serializeUtil.serialize(allUsers));
+        return result;
     }
 
     public Map<String, Peer> getUsers() {

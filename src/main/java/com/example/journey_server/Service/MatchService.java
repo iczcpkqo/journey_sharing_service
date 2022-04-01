@@ -70,7 +70,7 @@ public class MatchService {
         if (user.getLimit() == null || user.getLimit() == 0) {
             user.setLimit(5);
         }
-        redisUtil.addUser(user);
+
         user.setLeader(true);
         String uuid = UUID.randomUUID().toString();
         List<Peer> result = new ArrayList<>();
