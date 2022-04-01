@@ -83,6 +83,9 @@ public class MatchService {
             if (userM.getAge() > user.getMaxAge() || userM.getAge() < user.getMinAge()) {
                 continue;
             }
+            if(!user.getGenderCon().equals("other") && !user.getGenderCon().equals(userM.getGender())){
+                continue;
+            }
             if (getDistance(user.getLongitude(), user.getLatitude(), userM.getLongitude(), userM.getLatitude()) >= 500) {
                 continue;
             }

@@ -56,6 +56,8 @@ public class Peer implements Serializable {
 
     Integer maxAge;
 
+    String genderCon;
+
     public String getEmail() {
         return email;
     }
@@ -256,7 +258,15 @@ public class Peer implements Serializable {
         this.maxAge = maxAge;
     }
 
-    public Peer(String email, String gender, Integer age, Double score, Double longitude, Double latitude, Double dLongtitude, Double dLatitude, Long startTime, Long endTime, Integer order, String orderId, Integer limit, Boolean leader, Boolean furthest, String uuid, Boolean confirmed, List<String> blacklist, String ip, String port, String startAddress, String destination, Map<String, String> otherFields, Integer minAge, Integer maxAge) {
+    public String getGenderCon() {
+        return genderCon;
+    }
+
+    public void setGenderCon(String genderCon) {
+        this.genderCon = genderCon;
+    }
+
+    public Peer(String email, String gender, Integer age, Double score, Double longitude, Double latitude, Double dLongtitude, Double dLatitude, Long startTime, Long endTime, Integer order, String orderId, Integer limit, Boolean leader, Boolean furthest, String uuid, Boolean confirmed, List<String> blacklist, String ip, String port, String startAddress, String destination, Map<String, String> otherFields, Integer minAge, Integer maxAge, String genderCon) {
         this.email = email;
         this.gender = gender;
         this.age = age;
@@ -282,5 +292,6 @@ public class Peer implements Serializable {
         this.otherFields = otherFields;
         this.minAge = minAge;
         this.maxAge = maxAge;
+        this.genderCon = genderCon;
     }
 }
