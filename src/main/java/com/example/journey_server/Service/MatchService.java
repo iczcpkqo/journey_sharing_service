@@ -70,11 +70,16 @@ public class MatchService {
         if (user.getLimit() == null || user.getLimit() == 0) {
             user.setLimit(5);
         }
+        Map<String, List<Peer>> matchedUser = redisUtil.getMatchedUser();
+        List<Peer> peers = matchedUser.get(user.getEmail());
+        if(peers == null || peers.size() == 0){
+            peers = new ArrayList<>();
+            user.setLeader(true);
+            peers.add(user);
+        }
 
-        user.setLeader(true);
         String uuid = UUID.randomUUID().toString();
-        List<Peer> result = new ArrayList<>();
-        result.add(user);
+
         for (Map.Entry<String, Peer> entry : redisUtil.getUsers().entrySet()) {
             Peer userM = entry.getValue();
             if (user.getEmail().equals(userM.getEmail())) {
@@ -93,22 +98,23 @@ public class MatchService {
                     userM.getdLongtitude(), userM.getdLatitude()) >= 45) {
                 continue;
             }
-            result.add(userM);
+            peers.add(userM);
+            calFurthest(peers);
+            addUuid(peers, uuid);
             redisUtil.removeUser(userM.getEmail());
-            redisUtil.putMatchedUser(user.getEmail(), result);
-            if (result.size() >= user.getLimit()) {
-                calFurthest(result);
-                addUuid(result, uuid);
-                return result;
+            redisUtil.putMatchedUser(user.getEmail(), peers);
+            if (peers.size() >= user.getLimit()) {
+                return peers;
             }
         }
-        calFurthest(result);
-        addUuid(result, uuid);
-        for (Peer peer : result) {
+        calFurthest(peers);
+        addUuid(peers, uuid);
+        redisUtil.putMatchedUser(user.getEmail(), peers);
+        for (Peer peer : peers) {
             System.out.println(peer.getEmail() + ":" + peer.getLeader());
         }
 
-        return result;
+        return peers;
     }
 
     private void addUuid(List<Peer> result, String uuid) {

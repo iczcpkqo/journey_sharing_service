@@ -21,15 +21,18 @@ public class MatchController {
 
     @PostMapping("/matchLeader")
     public List<Peer> matchLeader(@RequestBody Peer peer) {
-        System.out.println(peer.getEmail());
-        return matchService.getMatch(peer);
+        System.out.println("matchLeader:" + peer.getEmail());
+        List<Peer> usersList = matchService.getMatch(peer);
+        System.out.println(usersList.size());
+        return usersList;
     }
 
 
     @PostMapping("/matchMember")
     public List<Peer> matchMember(@RequestBody Peer peer) {
-        System.out.println("matchMember:" + peer.getEmail());
+//        System.out.println("matchMember:" + peer.getEmail());
         List<Peer> usersList = matchService.getMatchMember(peer);
+//        System.out.println(usersList.size());
         return usersList;
     }
 
