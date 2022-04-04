@@ -30,7 +30,7 @@ public class MatchController {
 
     @PostMapping("/matchMember")
     public List<Peer> matchMember(@RequestBody Peer peer) {
-//        System.out.println("matchMember:" + peer.getEmail());
+        System.out.println("matchMember:" + peer.getEmail());
         List<Peer> usersList = matchService.getMatchMember(peer);
 //        System.out.println(usersList.size());
         return usersList;

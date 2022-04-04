@@ -85,15 +85,20 @@ public class MatchService {
             if (user.getEmail().equals(userM.getEmail())) {
                 continue;
             }
+            System.out.println("matching--maxAge:"+user.getMaxAge()+"--minAge:"+user.getMinAge()+"--memberage:"+userM.getAge());
             if (userM.getAge() > user.getMaxAge() || userM.getAge() < user.getMinAge()) {
                 continue;
             }
-            if(!user.getGenderCon().equals("other") && !user.getGenderCon().equals(userM.getGender())){
+            System.out.println("matching--gender:"+user.getGenderCon()+"--membergender:"+userM.getGender());
+            if(!user.getGenderCon().equals("Other") && !user.getGenderCon().equals(userM.getGender())){
                 continue;
             }
+            System.out.println("matching--distance:"+getDistance(user.getLongitude(), user.getLatitude(), userM.getLongitude(), userM.getLatitude()));
             if (getDistance(user.getLongitude(), user.getLatitude(), userM.getLongitude(), userM.getLatitude()) >= 500) {
                 continue;
             }
+            System.out.println("matching--angle:"+getAngel(user.getdLongtitude(), user.getdLatitude(), user.getLongitude(), user.getLongitude(),
+                    userM.getdLongtitude(), userM.getdLatitude()));
             if (getAngel(user.getdLongtitude(), user.getdLatitude(), user.getLongitude(), user.getLongitude(),
                     userM.getdLongtitude(), userM.getdLatitude()) >= 45) {
                 continue;
