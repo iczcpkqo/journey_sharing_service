@@ -4,14 +4,19 @@ import com.example.journey_server.Service.MatchService;
 import com.example.journey_server.entity.Peer;
 import com.example.journey_server.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
 public class MatchController {
 
+    private static final String LOCK_SUCCESS = "OK";
+    private static final String SET_IF_NOT_EXIST = "NX";
+    private static final String SET_WITH_EXPIRE_TIME = "PX";
+    private static final String LOCK_KEY = "key";
+
+    private static long expireTime = 3000;
     @Autowired
     private MatchService matchService;
 
@@ -36,15 +41,5 @@ public class MatchController {
         return usersList;
     }
 
-    @PostMapping("/createGroup")
-    public String createGroup(@RequestBody List<Peer> peers) {
-        Peer leader = matchService.getLeader(peers);
-        if(redisUtil.lock(leader.getEmail())){
-            String groupId = matchService.createGroup(peers);
-            return groupId;
-        }else {
-            return "";
-        }
-    }
 
 }

@@ -21,7 +21,7 @@ public class RedisUtil {
 
     private static String lock_key = "redis_lock";
 
-    private static long internalLockLeaseTime = 10000;
+    private static long internalLockLeaseTime = 3000;
 
     private static long timeout = 15000;
 
