@@ -2,9 +2,10 @@ package com.example.journey_server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-//@MapperScan("Controller")
+@ComponentScan(basePackages = {"com.example"})
 public class JourneyServerApplication {
 
     public static void main(String[] args) {
